@@ -47,16 +47,16 @@ public class ServerNotification {
         // Themen, an die die Benachrichtigung gesendet werden soll
         ArrayList<String> topics = new ArrayList<String>();
         // Alle Benachrichtungen werden an dieses Topic gesendet:
-        topics.add(Notification.TOPIC_ALL);
+        //topics.add(Notification.TOPIC_ALL);
         // Notification Inhalt und Topics aufbauen (je nachdem ob Postkasten geöffnet oder geschlossen wurde)
-        if(geoeffnet == true)
-        {
-            body = new Notification_Body(Notification_Body.DEFAULT_TITLE, Notification_Body.BODY_OPEN);
-            topics.add(Notification.TOPIC_OPEN);
-        } else{
+      //  if(geoeffnet == true)
+        //{
+          //  body = new Notification_Body(Notification_Body.DEFAULT_TITLE, Notification_Body.BODY_OPEN);
+            //topics.add(Notification.TOPIC_OPEN);
+        //} else{
             body = new Notification_Body(Notification_Body.DEFAULT_TITLE, Notification_Body.BODY_CLOSE);
-            topics.add(Notification.TOPIC_CLOSE);
-        }
+          //  topics.add(Notification.TOPIC_CLOSE);
+        //}
 
         // Gson Objekt zur Umwandlung der Java Objekte in JSON
         Gson gson = new Gson();
