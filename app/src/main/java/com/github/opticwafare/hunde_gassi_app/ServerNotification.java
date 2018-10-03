@@ -19,8 +19,8 @@ import java.util.Scanner;
 import com.github.opticwafare.hunde_gassi_app.model.Notification;
 import com.github.opticwafare.hunde_gassi_app.model.Notification_Body;
 import com.github.opticwafare.hunde_gassi_app.model.Notification_Outer;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.util.IOUtils;
+//import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+//import com.google.api.client.util.IOUtils;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -122,22 +122,17 @@ public class ServerNotification {
      */
     private static String getAccessToken() throws IOException {
         // Google Credentials einstellen
-        InputStream inputStream = new ByteArrayInputStream(getAuthFile().getBytes(StandardCharsets.UTF_8));
+        /*InputStream inputStream = new ByteArrayInputStream(getAuthFile().getBytes(StandardCharsets.UTF_8));
         GoogleCredential googleCredential = GoogleCredential
                 .fromStream(inputStream)
-                .createScoped(Arrays.asList(SCOPES));
-
-		/*
-		 * 		GoogleCredential googleCredential = GoogleCredential
-				.fromStream(new FileInputStream(getAuthFile()))
-				.createScoped(Arrays.asList(SCOPES));
-		 */
+                .createScoped(Arrays.asList(SCOPES));*/
 
         // Neuen Token holen (falls vorhanden)
-        googleCredential.refreshToken();
-        System.out.println("Token: " + googleCredential.getAccessToken());
+        //googleCredential.refreshToken();
+        //System.out.println("Token: " + googleCredential.getAccessToken());
         // Token zurückgeben
-        return googleCredential.getAccessToken();
+        return null;
+        //return googleCredential.getAccessToken();
     }
 
     /**

@@ -14,13 +14,6 @@ public class Notification {
     /** Inhalt der Notification */
     private Notification_Body notification;
 
-    /** Thema zu dem alle PostkastenÃ¤nderungen gesendet werden sollen */
-    public final static String TOPIC_ALL = "postkasten";
-    /** Thema zu dem Postkasten-Öffnungen gesendet werden sollen */
-    public final static String TOPIC_OPEN = "postkasten_offen";
-    /** Thema zu dem Postkasten-Schließungen gesendet werden sollen */
-    public final static String TOPIC_CLOSE = "postkasten_geschlossen";
-
     /**
      * Konstruktor
      * @param condition Abfrage an welche Geräte die Notification gesendet werden soll (Topics)
