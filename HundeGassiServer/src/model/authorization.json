@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hunde-gassi-app",
+  "private_key_id": "a5a6a8303a790eda581ce079c1af0cfab119f095",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC3QV56qMKi2GvM\nRaKyjnU2G8Rm2taMkB88H2CqKfHcRcDnMc/ORN0QBiHTA6JkPIKUS2FfsVtzGKGa\nBJquL2ELTU6Iyn2Pg849cl3EoxdYqLsCkw6ejG6n+gTPGNmDpkRMQGQDuUoohKS8\nNOye0f8Tri+KRRmW55bh3XBuw9yJfS8/Mg+uePnydBBXuH1HGsQu3s/WGHJjBQH6\n59+l2xFOxecehADZHpIdfdEXclrLkgiyIX3ElnuWmgMjEUOvPrRy8uqRajy6hdk7\nKyMdc+R4iC/y/Xv4PPCQfvkWw9+pczVKb1IgWV/OLVnSjjqb9M5QVBbN2bW5/c0d\nCffxAxvPAgMBAAECggEADMzVGO48F3x/HcKTbbNuU9GMCL8qaKER0spCSesqHf+v\n92DO/2e8pTI4dJvMC6z/q0oPSswsSMAksYm2yt87q7rCTI268tD7ETxcI7BcoMW7\nDPVRT8PGtZb3dQZq/btvCSsfkUmvo2A4fX5DijMS2mtlSLGGQGMmx9oG0MXU3AmI\nhq8/k4OSEy93QZmF+0lCWzfic7+NihUKQVFgp7+QGFKW0VOBjeHN/kGWoX09yo0j\nKOia2kylhyGcuuC+agbzupQZ1rmLvdXy2ryJSwQZluE6rj3nzgAXszeoCoeaPNzQ\nKZSpw65ZRXL3ymE4jtwfnyMR5oaTPqC0lEZF3hgrmQKBgQDaLLhhE2PseNe6XSZ4\nxIIKyNCYKh9wcYUaqZaZ8Pcu+/QTovqGsSYHEDjPKCvJFcMFJ3E9dEDp5zndWhby\nGnNeymuW5yND6qPKllNurMoYJFGoraSYWgmA4VxHcFHlRZwdPvVx+pneUHJ0+L7Y\nIlKEm6J9S3MxE3nqeD1QfS0xNQKBgQDXBtGKzy0fcLBGoiYSL1AP4soHE3Mqhu6+\nffJL9ohKMuelqssGw4yUhKcaoUTuhJABBcooQNpN5jqX4Rd50mIQBbT+PfzKgSjp\nRGiG4yeEngYV9jg+6MpMP5qPrOo+4598WZLtwUP5GsTfS4CXd7aK6ru4QLNoTe9S\nYWHjSfcdcwKBgGzjpv5kVBng0iKkfSAHS7QgN+PKGjjfn4QIIi8g0e20OERYslrp\nLUaXNRNHRFsvLk9zORRn4kIbcojkftFEnFIyCvKc17/86tSgpHF3ccIM1miuiZi0\nT0vwrkLFb0pTrK/4DT5eyc7oLcftoipzLuYaW0XXk11qEA4TBt8WKqkFAoGBAJFp\nFAUZy3rqetqZRsOfaTYE+PhGB+inbQY3J8aFBm+e8xYOZNPDI+s/tb2Fd5cQ4E1A\nvA/yo25wlgkld/my8wvAwD/6bVwIckElOMaXEJ9XOehaJHkudbeQf5ZPqe0zgyPV\nc04DF1N67c3PQjusAi75RE76uhh8M65zGn5ZA5rPAoGBANiI0+fwm6PDIhZAQ/bE\nAciJy/wJ4mieDdQWSC6DE0TrC5eAA8vZx7sMucgMXuH+509JNV89lGpM6MBNC5lM\n6J4hRkwWweqgnhVboz9mFucIgraVjeuNfRqu9Q0iUkByW+Li5ZmYXdfYo2XLnU5N\nmgTUUSnlZn3t0OHsz2l4+eOV\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-bpprp@hunde-gassi-app.iam.gserviceaccount.com",
+  "client_id": "117313577570644392978",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-bpprp%40hunde-gassi-app.iam.gserviceaccount.com"
+}
