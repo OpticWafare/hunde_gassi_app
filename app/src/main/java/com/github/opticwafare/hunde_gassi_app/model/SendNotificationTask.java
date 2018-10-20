@@ -11,13 +11,24 @@ import java.net.URL;
 
 public class SendNotificationTask extends AsyncTask<String, Void, String> {
 
+    DateTime dateTime;
+
+    public DateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(DateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
     @Override
     protected String doInBackground(String... strings) {
         // TODO
         // TODO string params implementieren
 
         String targetURL = "http://10.0.2.2:8080/HundeGassiServer/SendNotification";
-        String urlParameters = "username=testuser";
+        // TODO in timestamp konvertieren?
+        String urlParameters = "username=testuser&"+dateTime.toURLParameter();
         HttpURLConnection connection = null;
         String serverResponse = null;
 
