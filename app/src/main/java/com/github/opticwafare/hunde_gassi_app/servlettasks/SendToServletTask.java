@@ -9,29 +9,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class SendNotificationTask extends AsyncTask<String, Void, String> {
+public class SendToServletTask extends AsyncTask<String, Void, String> {
 
-    DateTime dateTime;
-
-    public DateTime getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(DateTime dateTime) {
-        this.dateTime = dateTime;
-    }
+    public static final String TARGET_LOCATION = "http://10.0.2.2:8080/HundeGassiServer/";
+    private String servletName;
+    private String urlParameters;
 
     @Override
     protected String doInBackground(String... strings) {
-        // TODO
-        // TODO string params implementieren
 
-        String targetURL = "http://10.0.2.2:8080/HundeGassiServer/SendNotification";
-        // TODO in timestamp konvertieren?
-        String urlParameters = "username=testuser&"+dateTime.toURLParameter();
         HttpURLConnection connection = null;
         String serverResponse = null;
 
+        String targetURL = TARGET_LOCATION + servletName;
         try {
             URL url = new URL(targetURL);
             connection = (HttpURLConnection) url.openConnection();
@@ -75,9 +65,19 @@ public class SendNotificationTask extends AsyncTask<String, Void, String> {
         return serverResponse;
     }
 
-    @Override
-    protected void onPostExecute(String serverResponse) {
-        // TODO toast
-        System.out.println("Server Response: "+serverResponse);
+    public String getServletName() {
+        return servletName;
+    }
+
+    public void setServletName(String servletName) {
+        this.servletName = servletName;
+    }
+
+    public String getUrlParameters() {
+        return urlParameters;
+    }
+
+    public void setUrlParameters(String urlParameters) {
+        this.urlParameters = urlParameters;
     }
 }
