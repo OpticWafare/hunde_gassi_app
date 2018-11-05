@@ -12,46 +12,96 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.github.opticwafare.hunde_gassi_app.tabs.MapsTab;
+import com.github.opticwafare.hunde_gassi_app.tabs.NotificationTab;
+import com.github.opticwafare.hunde_gassi_app.tabs.SuperTab;
+
+import java.util.ArrayList;
+
+/**
+ * Handelt das Swipen zwischen den einzelnen Tabs
+ *
+ * Jeder Tab hat seine eigene Klasse, die von der Klasse SuberTab erbt
+ */
 public class FixedTabsPagerAdapter extends PagerAdapter {
 
     private MainActivity mContext;
 
+    /** Alle Tabs */
+    ArrayList<SuperTab> tabs = new ArrayList<>();
+    /** Der Tab der die Google Maps Karte beinhaltet  */
+    MapsTab mapsTab;
+
     public FixedTabsPagerAdapter(MainActivity mContext) {
         this.mContext = mContext;
+        init();
+    }
+
+    private void init() {
+        // Tabs hinzufügen
+        tabs.add(new NotificationTab());
+        mapsTab = new MapsTab();
+        tabs.add(mapsTab);
+        // TODO mehrere tabs
     }
 
     @Override
+    /** Gibt die Anzahl der Tabs zurück */
     public int getCount() {
-        return 2;
+        return tabs.size();
     }
 
     @NonNull
     @Override
+    /**
+     * Neuen Tab anzeigen
+     */
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         //return super.instantiateItem(container, position);
 
-        switch (position) {
+        // LayoutInflater erstellen. Wird verwendet um ein XML-Dokument in eine lauffähige GUI zu verwandeln
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+
+        // Der Tab der jetzt angezeigt werden soll
+        SuperTab currentTab = tabs.get(position);
+
+        // XML in eine lauffähige GUI verwandeln
+        ViewGroup layout = (ViewGroup) inflater.inflate(currentTab.getLayoutXML(), container, false);
+        // GUI zum Container hinzufügen
+        container.addView(layout);
+        // Init Methode des Tabs ausführen
+        currentTab.init(mContext);
+        // GUI zurückgeben
+        return layout;
+
+        // Alte version:
+        /*switch (position) {
             case 0:
-                LayoutInflater inflater = LayoutInflater.from(mContext);
+
 
                 //Intent myIntent = new Intent(mContext, SendNotification.class);
                 //mContext.startActivity(myIntent);
 
-                ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.activity_sendnotification, container, false);
+                layout = (ViewGroup) inflater.inflate(R.layout.activity_sendnotification, container, false);
 
-                /*SendNotification sn = new SendNotification();
-                sn.setContentView(layout);
-                sn.init();*/
+                //SendNotification sn = new SendNotification();
+                //sn.setContentView(layout);
+                //sn.init();
                 container.addView(layout);
                 mContext.startSendNotificationGUI();
                 return layout;
 
 
                 //container.addView(sn.getViewGroup());
-                //return sn.getViewGroup();*/
-            case 1: return null;
+                //return sn.getViewGroup();
+            case 1:
+                layout = (ViewGroup) inflater.inflate(R.layout.activity_maps, container, false);
+                container.addView(layout);
+                mContext.startMapsGUI();
+                return layout;
+
             default: return null;
-        }
+        }*/
     }
 
     @Override
@@ -66,6 +116,11 @@ public class FixedTabsPagerAdapter extends PagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "test page";
+        return tabs.get(position).getTabTitle();
+    }
+
+    public void locationAccessGranted() {
+        //initialize our map
+        mapsTab.initMap();
     }
 }

@@ -1,4 +1,4 @@
-package com.github.opticwafare.hunde_gassi_app;
+package com.github.opticwafare.hunde_gassi_app.locationupdater;
 
 import com.google.android.gms.maps.model.LatLng;
 

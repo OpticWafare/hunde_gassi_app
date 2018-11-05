@@ -1,26 +1,19 @@
 package com.github.opticwafare.hunde_gassi_app;
 
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.github.opticwafare.hunde_gassi_app.dialogfragments.DateTimePickerChanged;
 import com.github.opticwafare.hunde_gassi_app.dialogfragments.DateTimePickerFragment;
-import com.github.opticwafare.hunde_gassi_app.model.SendNotificationTask;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class NotificationButtonListener implements View.OnClickListener {
 
     private AppCompatActivity activity;
+    private DateTimePickerChanged listener;
 
-    public NotificationButtonListener(AppCompatActivity activity) {
+    public NotificationButtonListener(AppCompatActivity activity, DateTimePickerChanged listener) {
         this.activity = activity;
+        this.listener = listener;
     }
 
     @Override
@@ -28,9 +21,13 @@ public class NotificationButtonListener implements View.OnClickListener {
 
         // Date Time Picker aufrufen
         DateTimePickerFragment dateTimePickerFragment = new DateTimePickerFragment(getActivity());
-        dateTimePickerFragment.addListener((DateTimePickerChanged) getActivity());
+        dateTimePickerFragment.addListener(getListener());
         dateTimePickerFragment.setContext(getActivity());
         dateTimePickerFragment.showDateTimePicker();
+    }
+
+    public DateTimePickerChanged getListener() {
+        return listener;
     }
 
     public AppCompatActivity getActivity() {

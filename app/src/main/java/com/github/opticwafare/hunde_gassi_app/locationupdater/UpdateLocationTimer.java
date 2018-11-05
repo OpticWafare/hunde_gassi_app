@@ -1,26 +1,27 @@
-package com.github.opticwafare.hunde_gassi_app;
+package com.github.opticwafare.hunde_gassi_app.locationupdater;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
+/**
+ * Timer zum Updaten der Location.
+ * Verwendet einen UpdateLocationTask um die neue Location zu erhalten.
+ *
+ * Der UpdateLocationTask steht hierbei im Herzen dieser Klasse und liefert bei jedem Ablauf des Tasks eine neue Locations.
+ * Die UpdateLocationTimer Klasse ist eigentlich nur ein Container für den UpdateLocationTask.
+ * In UpdateLocationTimer werden alle Locations gespeichert und Listener über neue Locations informiert.
+ *
+ * Nach dem Observer-Pattern Prinzip werden eingetragene Observer über
+ * die neuen Loctions benachrichtigt
+ */
 public class UpdateLocationTimer extends Timer {
 
+    /** Alle eingetragenen Listener für diesen Timer */
     private ArrayList<UpdateLocationTimerListener> listener;
     private ArrayList<LatLng> points;
-
-    private Polyline polyline;
-
-    public UpdateLocationTimer(Polyline polyline) {
-        this();
-        this.polyline = polyline;
-    }
 
     public UpdateLocationTimer() {
         this.listener = new ArrayList<>();
@@ -30,13 +31,15 @@ public class UpdateLocationTimer extends Timer {
     /** Wird von UpdateLocationTask ausgeführt */
     public void addnewPoint(LatLng newPoint) {
         this.points.add(newPoint);
-        // TODO vl als eigenen listener auslagern
-        if(polyline != null) {
-            polyline.setPoints(this.points);
-        }
         notifiyListener(this.points, newPoint);
     }
 
+    /**
+     * Stellt ein, dass der angegebene Task periodisch ausgeführt werden soll
+     * @param task
+     * @param delay
+     * @param period
+     */
     public void schedule(UpdateLocationTask task, long delay, long period) {
         task.setTimer(this);
         super.schedule(task, delay, period);

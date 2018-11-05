@@ -1,20 +1,25 @@
 package com.github.opticwafare.hunde_gassi_app;
 
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Button;
+import android.util.Log;
 
-import com.github.opticwafare.hunde_gassi_app.dialogfragments.DateTimePickerChanged;
-import com.github.opticwafare.hunde_gassi_app.dialogfragments.DateTimePickerFragment;
-import com.github.opticwafare.hunde_gassi_app.model.DateTime;
-import com.github.opticwafare.hunde_gassi_app.model.SendNotificationTask;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 
-public class MainActivity extends AppCompatActivity implements DateTimePickerChanged {
+public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
+
+    private FixedTabsPagerAdapter pagerAdapter;
+
+    private Boolean mLocationPermissionsGranted = false;
+
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements DateTimePickerCha
         setContentView(R.layout.activity_main);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-        PagerAdapter pagerAdapter = new FixedTabsPagerAdapter(this);
+        pagerAdapter = new FixedTabsPagerAdapter(this);
         viewPager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -31,26 +36,40 @@ public class MainActivity extends AppCompatActivity implements DateTimePickerCha
         FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new FCMTokenTaskCompleteListener());
     }
 
-    Button notificationButton;
-
-    public void startSendNotificationGUI() {
-
-        notificationButton = (Button) findViewById(R.id.button_notification);
-        notificationButton.setOnClickListener(new NotificationButtonListener(this));
-    }
-
     @Override
     public String toString() {
         return super.toString()+"- MainActivity";
     }
 
     @Override
-    public void dateTimeSet(DateTimePickerFragment view, DateTime chosenDateTime) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult: called.");
+        mLocationPermissionsGranted = false;
 
-        System.out.println(chosenDateTime);
-        SendNotificationTask notificationTask = new SendNotificationTask();
-        notificationTask.setDateTime(chosenDateTime);
-        notificationTask.execute("");
-        // TODO
+        switch(requestCode){
+            case LOCATION_PERMISSION_REQUEST_CODE:{
+                if(grantResults.length > 0){
+                    for(int i = 0; i < grantResults.length; i++){
+                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
+                            mLocationPermissionsGranted = false;
+                            Log.d(TAG, "onRequestPermissionsResult: permission failed");
+                            return;
+                        }
+                    }
+                    Log.d(TAG, "onRequestPermissionsResult: permission granted");
+                    mLocationPermissionsGranted = true;
+
+                    pagerAdapter.locationAccessGranted();
+                }
+            }
+        }
+    }
+
+    public Boolean getmLocationPermissionsGranted() {
+        return mLocationPermissionsGranted;
+    }
+
+    public void setmLocationPermissionsGranted(Boolean mLocationPermissionsGranted) {
+        this.mLocationPermissionsGranted = mLocationPermissionsGranted;
     }
 }

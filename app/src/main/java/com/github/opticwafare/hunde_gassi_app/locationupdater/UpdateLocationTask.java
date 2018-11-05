@@ -1,13 +1,16 @@
-package com.github.opticwafare.hunde_gassi_app;
-
-import com.google.android.gms.maps.model.LatLng;
+package com.github.opticwafare.hunde_gassi_app.locationupdater;
 
 import java.util.TimerTask;
 
+/**
+ * TimerTask für einen UpdateLocationTimer
+ * Die Sub-Klassen dieses Tasks implementieren die run-Methode,
+ * welche immer wieder eine neue Location finden
+ */
 public abstract class UpdateLocationTask extends TimerTask {
 
-    UpdateLocationTimer timer;
-    int counter;
+    private UpdateLocationTimer timer;
+    protected int counter;
 
     public UpdateLocationTask() {
         counter = 0;

@@ -1,4 +1,4 @@
-package com.github.opticwafare.hunde_gassi_app.model;
+package com.github.opticwafare.hunde_gassi_app.servlettasks;
 
 import android.os.AsyncTask;
 

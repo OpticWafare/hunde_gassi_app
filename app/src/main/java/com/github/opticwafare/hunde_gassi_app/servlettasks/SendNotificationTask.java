@@ -1,13 +1,6 @@
-package com.github.opticwafare.hunde_gassi_app.model;
+package com.github.opticwafare.hunde_gassi_app.servlettasks;
 
-import android.os.AsyncTask;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.github.opticwafare.hunde_gassi_app.model.DateTime;
 
 public class SendNotificationTask extends SendToServletTask {
 
