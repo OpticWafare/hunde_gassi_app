@@ -1,7 +1,10 @@
 package com.github.opticwafare.hunde_gassi_app.model;
 
-import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class Route {
 
@@ -61,5 +64,23 @@ public class Route {
 
     public void setPoints(ArrayList<Point> points) {
         this.points = points;
+    }
+
+    @Override
+    public String toString() {
+        Date startTime = new Date(getStartTime());
+
+        long timeDifference = getEndTime() - getStartTime();
+        Date timeDiff = new Date(timeDifference);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        dateFormat.setCalendar(Calendar.getInstance());
+        dateFormat.setTimeZone(Calendar.getInstance().getTimeZone());
+        String string = dateFormat.format(startTime);
+
+        SimpleDateFormat dateFormat1 = new SimpleDateFormat("HH:mm:ss");
+        dateFormat1.setTimeZone(TimeZone.getTimeZone("Etc/GMT"));
+        string += " ("+dateFormat1.format(timeDifference) + ")";
+        return string;
     }
 }

@@ -25,4 +25,8 @@ public abstract class SuperTab {
     public int getLayoutXML() {
         return layoutXML;
     }
+
+    public MainActivity getMainActivity() {
+        return mainActivity;
+    }
 }

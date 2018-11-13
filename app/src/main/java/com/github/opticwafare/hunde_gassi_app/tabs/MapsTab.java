@@ -9,15 +9,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.github.opticwafare.hunde_gassi_app.MainActivity;
+import com.github.opticwafare.hunde_gassi_app.MapsTabSpinnerListener;
 import com.github.opticwafare.hunde_gassi_app.NewRouteButtonListener;
 import com.github.opticwafare.hunde_gassi_app.R;
 import com.github.opticwafare.hunde_gassi_app.locationupdater.PolyLineUpdater;
 import com.github.opticwafare.hunde_gassi_app.locationupdater.UpdateLocationTask;
 import com.github.opticwafare.hunde_gassi_app.locationupdater.UpdateLocationTaskFake;
 import com.github.opticwafare.hunde_gassi_app.locationupdater.UpdateLocationTimer;
+import com.github.opticwafare.hunde_gassi_app.model.Route;
+import com.github.opticwafare.hunde_gassi_app.servlettasks.GetMyRoutesTask;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -33,6 +37,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MapsTab extends SuperTab implements OnMapReadyCallback {
@@ -50,10 +55,14 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
     private GoogleMap mMap;
 
     private Button btnNewRoute;
+    private Spinner spinner;
     private Polyline currentRoute;
     private Date currentRouteStartTime;
 
     private int mapStatus = 0;
+    private Route[] walkedRoutes;
+
+    private UpdateLocationTimer currentUpdateLocationTimer;
 
     public MapsTab() {
         super("Maps", R.layout.activity_maps);
@@ -65,6 +74,13 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
 
         btnNewRoute = (Button) mainActivity.findViewById(R.id.btnNewRoute);
         btnNewRoute.setOnClickListener(new NewRouteButtonListener(this));
+
+        spinner = (Spinner) mainActivity.findViewById(R.id.spinner);
+        spinner.setOnItemSelectedListener(new MapsTabSpinnerListener(this));
+
+        GetMyRoutesTask getMyRoutesTask = new GetMyRoutesTask();
+        getMyRoutesTask.setMapsTab(this);
+        getMyRoutesTask.execute("");
 
         if(isServicesOK()){
             startMapsGUI();
@@ -172,26 +188,26 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
                 return;
             }
 
-            LatLng startPoint = new LatLng(-35.016, 143.321);
+
 
             // Add polylines and polygons to the map. This section shows just
             // a single polyline. Read the rest of the tutorial to learn more.
-            currentRoute = googleMap.addPolyline(new PolylineOptions()
+            /*currentRoute = googleMap.addPolyline(new PolylineOptions()
                     .clickable(true)
-                    .add(startPoint));
+                    .add(startPoint));*/
 
             /*List<LatLng> points = polyline1.getPoints();
             points.add(new LatLng(100, 100));
             polyline1.setPoints(points);*/
 
 
-            UpdateLocationTimer timer = new UpdateLocationTimer();
+            /*UpdateLocationTimer timer = new UpdateLocationTimer();
 
             PolyLineUpdater polyLineUpdater = new PolyLineUpdater(currentRoute, mainActivity);
             timer.addListener(polyLineUpdater);
 
             UpdateLocationTask timerTask = new UpdateLocationTaskFake(startPoint, 0.5, 0.5);
-            timer.schedule(timerTask, TimeUnit.SECONDS.toMillis(5), TimeUnit.SECONDS.toMillis(5));
+            timer.schedule(timerTask, TimeUnit.SECONDS.toMillis(5), TimeUnit.SECONDS.toMillis(5));*/
 
             // Position the map's camera near Alice Springs in the center of Australia,
             // and set the zoom factor so most of Australia shows on the screen.
@@ -241,5 +257,33 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
 
     public void setCurrentRouteStartTime(Date currentRouteStartTime) {
         this.currentRouteStartTime = currentRouteStartTime;
+    }
+
+    public Route[] getWalkedRoutes() {
+        return walkedRoutes;
+    }
+
+    public void setWalkedRoutes(Route[] walkedRoutes) {
+        this.walkedRoutes = walkedRoutes;
+    }
+
+    public Spinner getSpinner() {
+        return spinner;
+    }
+
+    public GoogleMap getmMap() {
+        return mMap;
+    }
+
+    public void setmMap(GoogleMap mMap) {
+        this.mMap = mMap;
+    }
+
+    public UpdateLocationTimer getCurrentUpdateLocationTimer() {
+        return currentUpdateLocationTimer;
+    }
+
+    public void setCurrentUpdateLocationTimer(UpdateLocationTimer currentUpdateLocationTimer) {
+        this.currentUpdateLocationTimer = currentUpdateLocationTimer;
     }
 }
