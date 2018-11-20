@@ -115,7 +115,7 @@ public class SendNotification extends HttpServlet {
 		}
 		finally {
 			try {
-				db.closeConnection();
+				db.releaseConnection();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

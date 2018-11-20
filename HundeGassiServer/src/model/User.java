@@ -8,8 +8,6 @@ public class User {
 	private String email;
 	private String fcmtoken;
 	
-	
-	
 	public User(int userid, String username, String password, String email, String fcmtoken) {
 		super();
 		this.userid = userid;
@@ -19,6 +17,14 @@ public class User {
 		this.fcmtoken = fcmtoken;
 	}
 	
+	public User(String username, String password, String email, String fcmtoken) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.fcmtoken = fcmtoken;
+	}
+
 	public int getUserid() {
 		return userid;
 	}
@@ -50,8 +56,5 @@ public class User {
 
 	public void setFcmtoken(String fcmtoken) {
 		this.fcmtoken = fcmtoken;
-	}
-	
-	
-	
+	}	
 }

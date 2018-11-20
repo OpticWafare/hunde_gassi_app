@@ -114,10 +114,134 @@ public class DBManager {
 				routes.add(route);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return routes;
+	}
+	
+	public User getUserByEmail(String email) throws SQLException {
+		
+		
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		User ret = null;
+		try {
+			pstm = getConnection().prepareStatement("SELECT * FROM user WHERE email = ?");
+			pstm.setString(1, email);
+			
+			rs = pstm.executeQuery();
+			ret = resultSetToUser(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) rs.close();
+			if (pstm != null) pstm.close();		
+			releaseConnection();
+		}
+		 
+		return ret;
+	} 
+	
+	public User getUserByUsername(String username) throws SQLException {
+		
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		User ret = null;
+		try {
+			pstm = getConnection().prepareStatement("SELECT * FROM user WHERE username = ?");
+			pstm.setString(1, username);
+			
+			rs = pstm.executeQuery();
+			ret = resultSetToUser(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) rs.close();
+			if (pstm != null) pstm.close();
+			releaseConnection();
+		}
+		 
+		return ret;
+	}
+	
+	public User loginUserEmail(String email, String password) throws SQLException {
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		User ret = null;
+		try {
+			pstm = getConnection().prepareStatement("SELECT * FROM user WHERE email = ? AND password = ?");
+			pstm.setString(1, email);
+			pstm.setString(2, password);
+			rs = pstm.executeQuery();
+			ret = resultSetToUser(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) rs.close();
+			if (pstm != null) pstm.close();
+			releaseConnection();
+		}
+		
+		
+		return ret;
+	}
+
+	public User loginUserUsername(String username, String password) throws SQLException {
+		PreparedStatement pstm = null;
+		ResultSet rs = null;
+		User ret = null;
+		try {
+			pstm = getConnection().prepareStatement("SELECT * FROM user WHERE username = ? AND password = ?");
+			pstm.setString(1, username);
+			pstm.setString(2, password);
+			rs = pstm.executeQuery();
+			ret = resultSetToUser(rs);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			if (rs != null) rs.close();
+			if (pstm != null) pstm.close();
+			releaseConnection();
+		}
+	
+		return ret;
+	}
+	
+	
+	
+	/**
+	 * Wandelt das angegebene ResultSet in ein User Objekt um.
+	 * 
+	 * Wenn Änderungen an der User Tabelle in der Datenbank vorgenommen wurden,
+	 * müssen diese nur in dieser Methode und in der User Klasse angepasst werden.
+	 * 
+	 * @param rs
+	 * @return
+	 */
+	public User resultSetToUser(ResultSet rs)  
+	{
+		User user = null;
+		boolean empty;
+		try {
+			empty = !rs.next();
+			if(empty) {
+				return null;
+			}
+			
+			int userid = rs.getInt(1);
+			String username = rs.getString(2);
+			String password2 = rs.getString(3);
+			String email2 = rs.getString(4);
+			String fcmtoken = rs.getString(5);
+			
+			user = new User(userid, username, email2, password2, fcmtoken);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return user;
 	}
 
 	public Connection getConnection() throws SQLException {
@@ -129,7 +253,7 @@ public class DBManager {
 		return conn;
 	}
 
-	public void closeConnection() throws SQLException {
+	public void releaseConnection() throws SQLException {
 		if(conn != null) {
 			conn.close();
 			conn = null;
