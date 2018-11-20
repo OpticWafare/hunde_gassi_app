@@ -1,4 +1,4 @@
-package com.github.opticwafare.hunde_gassi_app;
+package com.github.opticwafare.hunde_gassi_app.pageradapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.github.opticwafare.hunde_gassi_app.MainActivity;
 import com.github.opticwafare.hunde_gassi_app.tabs.MapsTab;
 import com.github.opticwafare.hunde_gassi_app.tabs.NotificationTab;
 import com.github.opticwafare.hunde_gassi_app.tabs.SuperTab;
@@ -23,27 +24,19 @@ import java.util.ArrayList;
  *
  * Jeder Tab hat seine eigene Klasse, die von der Klasse SuberTab erbt
  */
-public class FixedTabsPagerAdapter extends PagerAdapter {
+public abstract class FixedTabsPagerAdapter extends PagerAdapter {
 
-    private MainActivity mContext;
+    private MainActivity mainActivity;
 
     /** Alle Tabs */
-    ArrayList<SuperTab> tabs = new ArrayList<>();
-    /** Der Tab der die Google Maps Karte beinhaltet  */
-    MapsTab mapsTab;
+    private ArrayList<SuperTab> tabs = new ArrayList<>();
 
-    public FixedTabsPagerAdapter(MainActivity mContext) {
-        this.mContext = mContext;
+    public FixedTabsPagerAdapter(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
         init();
     }
 
-    private void init() {
-        // Tabs hinzufügen
-        tabs.add(new NotificationTab());
-        mapsTab = new MapsTab();
-        tabs.add(mapsTab);
-        // TODO mehrere tabs
-    }
+    protected abstract void init();
 
     @Override
     /** Gibt die Anzahl der Tabs zurück */
@@ -60,7 +53,7 @@ public class FixedTabsPagerAdapter extends PagerAdapter {
         //return super.instantiateItem(container, position);
 
         // LayoutInflater erstellen. Wird verwendet um ein XML-Dokument in eine lauffähige GUI zu verwandeln
-        LayoutInflater inflater = LayoutInflater.from(mContext);
+        LayoutInflater inflater = LayoutInflater.from(mainActivity);
 
         // Der Tab der jetzt angezeigt werden soll
         SuperTab currentTab = tabs.get(position);
@@ -70,7 +63,7 @@ public class FixedTabsPagerAdapter extends PagerAdapter {
         // GUI zum Container hinzufügen
         container.addView(layout);
         // Init Methode des Tabs ausführen
-        currentTab.init(mContext);
+        currentTab.init(mainActivity);
         // GUI zurückgeben
         return layout;
 
@@ -119,8 +112,11 @@ public class FixedTabsPagerAdapter extends PagerAdapter {
         return tabs.get(position).getTabTitle();
     }
 
-    public void locationAccessGranted() {
-        //initialize our map
-        mapsTab.initMap();
+    public ArrayList<SuperTab> getTabs() {
+        return tabs;
+    }
+
+    public void addTab(SuperTab tab) {
+        this.tabs.add(tab);
     }
 }

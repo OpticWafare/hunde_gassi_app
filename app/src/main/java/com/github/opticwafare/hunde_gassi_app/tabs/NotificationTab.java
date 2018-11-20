@@ -3,7 +3,7 @@ package com.github.opticwafare.hunde_gassi_app.tabs;
 import android.widget.Button;
 
 import com.github.opticwafare.hunde_gassi_app.MainActivity;
-import com.github.opticwafare.hunde_gassi_app.NotificationButtonListener;
+import com.github.opticwafare.hunde_gassi_app.listener.NotificationButtonListener;
 import com.github.opticwafare.hunde_gassi_app.R;
 import com.github.opticwafare.hunde_gassi_app.dialogfragments.DateTimePickerChanged;
 import com.github.opticwafare.hunde_gassi_app.dialogfragments.DateTimePickerFragment;

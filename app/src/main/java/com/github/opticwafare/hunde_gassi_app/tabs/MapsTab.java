@@ -10,15 +10,13 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.opticwafare.hunde_gassi_app.MainActivity;
-import com.github.opticwafare.hunde_gassi_app.MapsTabSpinnerListener;
-import com.github.opticwafare.hunde_gassi_app.NewRouteButtonListener;
+import com.github.opticwafare.hunde_gassi_app.listener.MapsTabSpinnerListener;
+import com.github.opticwafare.hunde_gassi_app.listener.NewRouteButtonListener;
 import com.github.opticwafare.hunde_gassi_app.R;
-import com.github.opticwafare.hunde_gassi_app.locationupdater.PolyLineUpdater;
-import com.github.opticwafare.hunde_gassi_app.locationupdater.UpdateLocationTask;
-import com.github.opticwafare.hunde_gassi_app.locationupdater.UpdateLocationTaskFake;
 import com.github.opticwafare.hunde_gassi_app.locationupdater.UpdateLocationTimer;
 import com.github.opticwafare.hunde_gassi_app.model.Route;
 import com.github.opticwafare.hunde_gassi_app.servlettasks.GetMyRoutesTask;
@@ -31,14 +29,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class MapsTab extends SuperTab implements OnMapReadyCallback {
 
@@ -56,6 +51,8 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
 
     private Button btnNewRoute;
     private Spinner spinner;
+    private TextView textView_info1;
+
     private Polyline currentRoute;
     private Date currentRouteStartTime;
 
@@ -77,6 +74,8 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
 
         spinner = (Spinner) mainActivity.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(new MapsTabSpinnerListener(this));
+
+        textView_info1 = (TextView) mainActivity.findViewById(R.id.textView_info1);
 
         GetMyRoutesTask getMyRoutesTask = new GetMyRoutesTask();
         getMyRoutesTask.setMapsTab(this);
@@ -175,7 +174,7 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(mainActivity, "Map is Ready", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mainActivity, "Map is Ready", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onMapReady: map is ready");
         mMap = googleMap;
 
@@ -285,5 +284,9 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
 
     public void setCurrentUpdateLocationTimer(UpdateLocationTimer currentUpdateLocationTimer) {
         this.currentUpdateLocationTimer = currentUpdateLocationTimer;
+    }
+
+    public void setTextViewInfo1Text(String text) {
+        this.textView_info1.setText(text);
     }
 }

@@ -28,6 +28,10 @@ public class GetMyRoutesTask extends SendToServletTask {
         Gson gson = new Gson();
         Route[] routen = gson.fromJson(serverResponse, Route[].class);
 
+        if(routen == null) {
+            System.out.println("No routes found for this user");
+            return;
+        }
         List<String> list = new ArrayList<String>();
         for(int i = 0; i < routen.length; i++) {
             list.add(routen[i].toString());
