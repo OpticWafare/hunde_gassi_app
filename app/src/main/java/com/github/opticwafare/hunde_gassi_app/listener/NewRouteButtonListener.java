@@ -2,9 +2,11 @@ package com.github.opticwafare.hunde_gassi_app.listener;
 
 import android.view.View;
 
+import com.github.opticwafare.hunde_gassi_app.locationupdater.DistanceLabelUpdater;
 import com.github.opticwafare.hunde_gassi_app.locationupdater.PolyLineUpdater;
 import com.github.opticwafare.hunde_gassi_app.locationupdater.UpdateLocationTask;
 import com.github.opticwafare.hunde_gassi_app.locationupdater.UpdateLocationTaskFake;
+import com.github.opticwafare.hunde_gassi_app.locationupdater.UpdateLocationTaskReal;
 import com.github.opticwafare.hunde_gassi_app.locationupdater.UpdateLocationTimer;
 import com.github.opticwafare.hunde_gassi_app.model.LatLngTools;
 import com.github.opticwafare.hunde_gassi_app.model.Point;
@@ -45,10 +47,12 @@ public class NewRouteButtonListener implements View.OnClickListener {
         switch (mapsTab.getMapStatus()) {
             // Neue Route starten
             case 0:
-                mapsTab.getSpinner().setEnabled(true);
+                //mapsTab.getSpinner().setEnabled(true); // TODO entfernen?
 
                 mapsTab.getBtnNewRoute().setText("Route stoppen");
                 mapsTab.setMapStatus(1);
+
+                mapsTab.setTextViewInfo1Text("");
 
                 Date currentDate = calendar.getTime();
                 mapsTab.setCurrentRouteStartTime(currentDate);
@@ -57,6 +61,11 @@ public class NewRouteButtonListener implements View.OnClickListener {
 
                 LatLng startPoint = new LatLng(-35.016, 143.321);
 
+                // Alte polyline entfernen
+                if(mapsTab.getCurrentRoute() != null) {
+                    mapsTab.getCurrentRoute().remove();
+                    mapsTab.setCurrentRoute(null);
+                }
                 // Add polylines and polygons to the map. This section shows just
                 // a single polyline. Read the rest of the tutorial to learn more.
                 Polyline currentRoute = mapsTab.getmMap().addPolyline(new PolylineOptions()
@@ -69,7 +78,13 @@ public class NewRouteButtonListener implements View.OnClickListener {
                 PolyLineUpdater polyLineUpdater = new PolyLineUpdater(currentRoute, mapsTab.getMainActivity());
                 timer.addListener(polyLineUpdater);
 
-                UpdateLocationTask timerTask = new UpdateLocationTaskFake(startPoint, 0.5, 0.5);
+                DistanceLabelUpdater distanceLabelUpdater = new DistanceLabelUpdater(mapsTab.getTextView_info1(), mapsTab.getMainActivity());
+                timer.addListener(distanceLabelUpdater);
+
+                //UpdateLocationTask timerTask = new UpdateLocationTaskFake(startPoint, 0.5, 0.5);
+                UpdateLocationTaskReal timerTask = new UpdateLocationTaskReal(mapsTab);
+                //mapsTab.addLocationListener(timerTask);
+                mapsTab.getMainActivity().addLocationListener(timerTask);
                 timer.schedule(timerTask, TimeUnit.SECONDS.toMillis(3), TimeUnit.SECONDS.toMillis(3));
 
                 mapsTab.setCurrentRoute(currentRoute);

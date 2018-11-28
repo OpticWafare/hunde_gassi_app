@@ -1,8 +1,10 @@
 package com.github.opticwafare.hunde_gassi_app.pageradapter;
 
 import com.github.opticwafare.hunde_gassi_app.MainActivity;
+import com.github.opticwafare.hunde_gassi_app.tabs.ContactsTab;
 import com.github.opticwafare.hunde_gassi_app.tabs.MapsTab;
 import com.github.opticwafare.hunde_gassi_app.tabs.NotificationTab;
+import com.github.opticwafare.hunde_gassi_app.tabs.SettingsTab;
 
 public class MainPagerAdapter extends FixedTabsPagerAdapter {
 
@@ -19,7 +21,8 @@ public class MainPagerAdapter extends FixedTabsPagerAdapter {
         addTab(new NotificationTab());
         mapsTab = new MapsTab();
         addTab(mapsTab);
-        // TODO mehrere tabs
+        addTab(new SettingsTab());
+        //addTab(new ContactsTab());
     }
 
     public void locationAccessGranted() {

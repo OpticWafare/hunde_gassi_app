@@ -3,6 +3,7 @@ package com.github.opticwafare.hunde_gassi_app.pageradapter;
 import com.github.opticwafare.hunde_gassi_app.MainActivity;
 import com.github.opticwafare.hunde_gassi_app.tabs.LoginTab;
 import com.github.opticwafare.hunde_gassi_app.tabs.RegisterTab;
+import com.github.opticwafare.hunde_gassi_app.tabs.SettingsTab;
 
 public class LoginPagerAdapter extends FixedTabsPagerAdapter {
 
@@ -13,6 +14,7 @@ public class LoginPagerAdapter extends FixedTabsPagerAdapter {
     @Override
     protected void init() {
 
+        addTab(new SettingsTab());
         addTab(new LoginTab());
         addTab(new RegisterTab());
     }

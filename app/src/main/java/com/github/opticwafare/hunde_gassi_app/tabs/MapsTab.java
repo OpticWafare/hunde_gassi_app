@@ -17,6 +17,7 @@ import com.github.opticwafare.hunde_gassi_app.MainActivity;
 import com.github.opticwafare.hunde_gassi_app.listener.MapsTabSpinnerListener;
 import com.github.opticwafare.hunde_gassi_app.listener.NewRouteButtonListener;
 import com.github.opticwafare.hunde_gassi_app.R;
+import com.github.opticwafare.hunde_gassi_app.locationupdater.LocationListener;
 import com.github.opticwafare.hunde_gassi_app.locationupdater.UpdateLocationTimer;
 import com.github.opticwafare.hunde_gassi_app.model.Route;
 import com.github.opticwafare.hunde_gassi_app.servlettasks.GetMyRoutesTask;
@@ -29,10 +30,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MapsTab extends SuperTab implements OnMapReadyCallback {
@@ -44,7 +49,7 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
 
-    private static final float DEFAULT_ZOOM = 15f;
+    public static final float DEFAULT_ZOOM = 15f;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private GoogleMap mMap;
@@ -60,6 +65,9 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
     private Route[] walkedRoutes;
 
     private UpdateLocationTimer currentUpdateLocationTimer;
+
+    private Location currentLocation;
+    private ArrayList<LocationListener> locationListeners = new ArrayList<>();
 
     public MapsTab() {
         super("Maps", R.layout.activity_maps);
@@ -113,24 +121,29 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
         return false;
     }
 
-    private void getDeviceLocation(){
+    public Location getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mainActivity);
 
+        Location currentLocation = null;
         try{
             if(mainActivity.getmLocationPermissionsGranted()){
 
+                
                 final Task location = mFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
+                        System.out.println("getDeviceLocation: task complete");
                         if(task.isSuccessful()){
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
 
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM);
+                            /*moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                    DEFAULT_ZOOM);*/
+
+                            setCurrentLocation(currentLocation);
 
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
@@ -138,13 +151,36 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
                         }
                     }
                 });
+                location.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("getDeviceLocation failure: ");
+                        e.printStackTrace();
+                    }
+                });
+                location.addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        System.out.println("getDeviceLocation was cancelled");
+                    }
+                });
+                location.addOnSuccessListener(new OnSuccessListener() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        System.out.println("getDeviceLocation onSuccess: " + o);
+                    }
+                });
+            }
+            else {
+                System.out.println("trying to get device location, but getmLocationPermissionsGranted was false");
             }
         }catch (SecurityException e){
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
+        return getCurrentLocation();
     }
 
-    private void moveCamera(LatLng latLng, float zoom){
+    public void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
@@ -179,7 +215,17 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
         mMap = googleMap;
 
         if (mainActivity.getmLocationPermissionsGranted()) {
-            //getDeviceLocation();
+            getDeviceLocation();
+
+            addLocationListener(new LocationListener() {
+                @Override
+                public void currentLocationChanged(Location currentLocation) {
+                    LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                    moveCamera(latLng, DEFAULT_ZOOM);
+
+                    removeLocationListener(this);
+                }
+            });
 
             if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity,
@@ -210,7 +256,7 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
 
             // Position the map's camera near Alice Springs in the center of Australia,
             // and set the zoom factor so most of Australia shows on the screen.
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.684, 133.903), 4));
+            //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.684, 133.903), 4));
 
             mMap.getUiSettings().setAllGesturesEnabled(true);
             mMap.getUiSettings().setCompassEnabled(true);
@@ -288,5 +334,36 @@ public class MapsTab extends SuperTab implements OnMapReadyCallback {
 
     public void setTextViewInfo1Text(String text) {
         this.textView_info1.setText(text);
+    }
+
+    public TextView getTextView_info1() {
+        return textView_info1;
+    }
+
+    public Location getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setCurrentLocation(Location currentLocation) {
+        this.currentLocation = currentLocation;
+        notifyLocationListeners();
+    }
+
+    public ArrayList<LocationListener> getLocationListeners() {
+        return locationListeners;
+    }
+
+    public void addLocationListener(LocationListener locationListener) {
+        locationListeners.add(locationListener);
+    }
+
+    public void removeLocationListener(LocationListener locationListener) {
+        locationListeners.remove(locationListener);
+    }
+
+    public void notifyLocationListeners() {
+        for (LocationListener locationListenr: locationListeners) {
+            locationListenr.currentLocationChanged(getCurrentLocation());
+        }
     }
 }

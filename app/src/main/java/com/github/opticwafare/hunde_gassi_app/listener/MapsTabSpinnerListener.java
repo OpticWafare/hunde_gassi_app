@@ -27,7 +27,23 @@ public class MapsTabSpinnerListener implements AdapterView.OnItemSelectedListene
 
         System.out.println("Selected mapsTab Spinner item: " + position);
 
+        // Alte Polylines entfernen
+        //mapsTab.getmMap().clear();
+        if(mapsTab.getCurrentRoute() != null) {
+            mapsTab.getCurrentRoute().remove();
+            mapsTab.setCurrentRoute(null);
+        }
+
+        if(position == 0) {
+            System.out.println("MapsTab Spinner position is 0 -> no route shown");
+            mapsTab.setTextViewInfo1Text("");
+            return;
+        }
+
+        position = position - 1;
         Route route = mapsTab.getWalkedRoutes()[position];
+
+        // Neue (vorerst leere) Polyline zur Karte hinzufügen
         Polyline polyline = mapsTab.getmMap().addPolyline(
                 new PolylineOptions()
                 .clickable(true)
@@ -36,13 +52,13 @@ public class MapsTabSpinnerListener implements AdapterView.OnItemSelectedListene
         List<LatLng> latLngList = LatLngTools.convertPointsToLatLngs(route.getPoints());
         polyline.setPoints(latLngList);
 
-        float lengthOfRoute = calculateDistance(polyline);
+        float lengthOfRoute = LatLngTools.calculateDistance(polyline);
         System.out.println("Length of route: " + lengthOfRoute);
-        mapsTab.setTextViewInfo1Text("Strecke: "+formatDistance(lengthOfRoute)+"m");
+        mapsTab.setTextViewInfo1Text(LatLngTools.distanceToLabelString(lengthOfRoute));
 
-        if(mapsTab.getCurrentRoute() != null) {
+        /*if(mapsTab.getCurrentRoute() != null) {
             mapsTab.getCurrentRoute().setPoints(new ArrayList<LatLng>());
-        }
+        }*/
         mapsTab.setCurrentRoute(polyline);
     }
 
@@ -50,22 +66,5 @@ public class MapsTabSpinnerListener implements AdapterView.OnItemSelectedListene
     public void onNothingSelected(AdapterView<?> parent) {
 
         System.out.println("MapsTab Spinner: nothing selected");
-    }
-
-    public float calculateDistance(Polyline polyline) {
-        float [] result = new float[1];
-        float result1 = 0;
-        for(int i = 0; i < polyline.getPoints().size()-1; i++)
-        {
-            LatLng latLng = polyline.getPoints().get(i);
-            LatLng latLng1 = polyline.getPoints().get(i+1);
-            Location.distanceBetween(latLng.latitude, latLng.longitude, latLng1.latitude, latLng1.longitude, result);
-            result1 = result1 + result[0];
-        }
-        return result1;
-    }
-
-    public String formatDistance(float distance) {
-        return String.format("%,.0f", distance);
     }
 }

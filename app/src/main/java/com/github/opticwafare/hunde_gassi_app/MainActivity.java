@@ -1,8 +1,14 @@
 package com.github.opticwafare.hunde_gassi_app;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,8 +21,9 @@ import com.github.opticwafare.hunde_gassi_app.pageradapter.LoginPagerAdapter;
 import com.github.opticwafare.hunde_gassi_app.pageradapter.MainPagerAdapter;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationListener {
 
     private static final String TAG = "MainActivity";
 
@@ -27,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private Boolean mLocationPermissionsGranted = false;
 
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+
+    LocationManager locationManager;
+    private ArrayList<LocationListener> locationListeners = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
 
         // Wenn kein User eingeloggt ist...
-        if(User.getLoggedInUser() == null) {
+        if (User.getLoggedInUser() == null) {
             // ... Login & Register Menü anzeigen
             pagerAdapter = new LoginPagerAdapter(this);
         }
@@ -58,6 +68,19 @@ public class MainActivity extends AppCompatActivity {
 
         // FCM Token holen lassen
         FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new FCMTokenTaskCompleteListener());
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, this);
     }
 
     @Override
@@ -107,5 +130,40 @@ public class MainActivity extends AppCompatActivity {
         this.pagerAdapter = pagerAdapter;
         viewPager.setAdapter(this.pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        System.out.println("MAIN ACTIVITY - Location changed: " + location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    public void addLocationListener(LocationListener locationListener) {
+        //locationListeners.add(locationListener);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1, locationListener);
     }
 }

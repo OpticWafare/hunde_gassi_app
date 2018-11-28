@@ -33,10 +33,11 @@ public class GetMyRoutesTask extends SendToServletTask {
             return;
         }
         List<String> list = new ArrayList<String>();
+        list.add("Route auswählen");
         for(int i = 0; i < routen.length; i++) {
             list.add(routen[i].toString());
         }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getMapsTab().getMainActivity(),
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getMapsTab().getMainActivity(),
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         getMapsTab().getSpinner().setAdapter(dataAdapter);

@@ -1,6 +1,9 @@
 package com.github.opticwafare.hunde_gassi_app.model;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,4 +40,29 @@ public class LatLngTools {
         return latLngs;
     }
 
+
+    public static float calculateDistance(Polyline polyline) {
+        return calculateDistance(polyline.getPoints());
+    }
+
+    public static float calculateDistance(List<LatLng> points) {
+        float [] result = new float[1];
+        float result1 = 0;
+        for(int i = 0; i < points.size()-1; i++)
+        {
+            LatLng latLng = points.get(i);
+            LatLng latLng1 = points.get(i+1);
+            Location.distanceBetween(latLng.latitude, latLng.longitude, latLng1.latitude, latLng1.longitude, result);
+            result1 = result1 + result[0];
+        }
+        return result1;
+    }
+
+    public static String formatDistance(float distance) {
+        return String.format("%,.0f", distance);
+    }
+
+    public static String distanceToLabelString(float distance) {
+        return "Strecke: "+formatDistance(distance)+"m";
+    }
 }

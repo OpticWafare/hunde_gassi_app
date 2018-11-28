@@ -10,10 +10,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class SendToServletTask extends AsyncTask<String, Void, String> {
-
-    public static final String TARGET_LOCATION = "http://10.0.2.2:8080/HundeGassiServer/";
     private String servletName;
     private String urlParameters;
+
+    private static String serverIPAddress = "192.168.1.125";
+    private static int serverPort = 8080;
+    private static String serverName = "HundeGassiServer";
 
     @Override
     protected String doInBackground(String... strings) {
@@ -21,7 +23,9 @@ public class SendToServletTask extends AsyncTask<String, Void, String> {
         HttpURLConnection connection = null;
         String serverResponse = null;
 
-        String targetURL = TARGET_LOCATION + servletName;
+        String targetLocation = "http://"+serverIPAddress+":"+serverPort+"/"+serverName+"/";
+        String targetURL = targetLocation + servletName;
+        System.out.println("trying to connect to " + targetURL);
         try {
             URL url = new URL(targetURL);
             connection = (HttpURLConnection) url.openConnection();
@@ -79,5 +83,29 @@ public class SendToServletTask extends AsyncTask<String, Void, String> {
 
     public void setUrlParameters(String urlParameters) {
         this.urlParameters = urlParameters;
+    }
+
+    public static String getServerIPAddress() {
+        return serverIPAddress;
+    }
+
+    public static void setServerIPAddress(String serverIPAddress) {
+        SendToServletTask.serverIPAddress = serverIPAddress;
+    }
+
+    public static int getServerPort() {
+        return serverPort;
+    }
+
+    public static void setServerPort(int serverPort) {
+        SendToServletTask.serverPort = serverPort;
+    }
+
+    public static String getServerName() {
+        return serverName;
+    }
+
+    public static void setServerName(String serverName) {
+        SendToServletTask.serverName = serverName;
     }
 }
