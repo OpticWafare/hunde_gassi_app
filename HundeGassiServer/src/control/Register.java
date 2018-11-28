@@ -108,13 +108,7 @@ public class Register extends HttpServlet {
 		// Ist dieser Username bereits registriert?
 		try {
 			if (db.getUserByUsername(username) != null) {
-				try {
-					showError(request, response, "Dieser Username ist schon registriert!");
-				} catch (ServletException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				showError(request, response, "Dieser Username ist schon registriert!");
 				return;
 			}
 		} catch (SQLException e1) {
@@ -124,23 +118,31 @@ public class Register extends HttpServlet {
 		// DATENCHECK ERFOLGREICH
 
 		// Daten des Users in Objekt zwischenspeichern
-		User user = new User(username, email, password, fcmToken);
-		User user2 = null;
+		User user = new User(username, password, email, fcmToken);
 		try {
 			// User erstellen
 			db.createUser(user);
-			// Erstellten User wieder aus DB holen
-			user2 = db.getUserByEmail(email);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
+		} 
+
+		// Erstellten User wieder aus DB holen
+		User user2 = null;
+		try {
+			user2 = db.getUserByEmail(email);
+			//user2 = db.getUserByUsername(user.getUsername());
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		finally {
 			try {
 				db.releaseConnection();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-
+		
+		System.out.println("User2 objekt: " + user2);
 		// Wenn das Holen des erstellten Users aus DB erfolgreich war
 		if (user2 != null) {
 

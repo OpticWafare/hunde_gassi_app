@@ -121,15 +121,16 @@ public class DBManager {
 	
 	public User getUserByEmail(String email) throws SQLException {
 		
-		
+		System.out.println("getting user by email " + email);
 		PreparedStatement pstm = null;
 		ResultSet rs = null;
 		User ret = null;
 		try {
-			pstm = getConnection().prepareStatement("SELECT * FROM user WHERE email = ?");
+			pstm = getConnection().prepareStatement("SELECT * FROM user WHERE email LIKE ?");
 			pstm.setString(1, email);
 			
 			rs = pstm.executeQuery();
+			System.out.println("result set: " + rs);
 			ret = resultSetToUser(rs);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -237,11 +238,41 @@ public class DBManager {
 			String fcmtoken = rs.getString(5);
 			
 			user = new User(userid, username, email2, password2, fcmtoken);
+			System.out.println("Result set to user user: " + user);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
 		return user;
+	}
+	
+	public List<User> getFriendsFromUser (int userid)
+	{
+		ResultSet rs = null;
+		PreparedStatement pstm = null;
+		User user = null;
+		List<User> users = new ArrayList<User>();
+		try {
+			pstm = getConnection().prepareStatement("Select u.userid, u.username, u.email, u.fcmtoken from friend f JOIN user u on(f.friendid = u.userid) where f.userid = ?");
+			pstm.setInt(1, userid);
+			rs = pstm.executeQuery();
+			while(rs.next() != false)
+			{
+				int friendid = rs.getInt(1);
+				String username = rs.getString(2);
+				String email = rs.getString(3);
+				String fcmtoken = rs.getString(4);
+				
+				user = new User (friendid, username, "", email, fcmtoken);
+				
+				users.add(user);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return users;
 	}
 
 	public Connection getConnection() throws SQLException {
