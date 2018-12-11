@@ -1,6 +1,7 @@
 package control;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -45,7 +46,14 @@ public class GetFriends extends HttpServlet {
 		int userId = Integer.parseInt(request.getParameter("userId"));
 		
 		DBManager db = new DBManager();
-		List<User> users = db.getFriendsFromUser(userId);
+		List<User> users = null;
+		try {
+			//users = db.getFriendsFromUser(userId);
+			users = db.getAllUsers();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		Gson gson = new Gson();
 		String json = gson.toJson(users);

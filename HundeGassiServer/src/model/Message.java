@@ -10,6 +10,11 @@ public class Message {
 	private String username;
 	/** FCMToken des Zielgeräts */
 	private String fcmToken;
+	private String toEmail;
+	private String fromEmail;
+	private String toName;
+	private String fromName;
+	
 	/** Timestamp wann die Nachricht gesendet werden soll */
 	private long sendTime;
 	/** Titel der Nachricht */

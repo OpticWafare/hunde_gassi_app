@@ -97,6 +97,7 @@ public class SendNotification extends HttpServlet {
 		String username = (String) request.getParameter("username");
 		System.out.println("Username: "+username);
 		
+		// Date Time
 		int year = Integer.parseInt(request.getParameter("year"));
 		int month = Integer.parseInt(request.getParameter("month"));
 		int date = Integer.parseInt(request.getParameter("date"));
@@ -104,6 +105,12 @@ public class SendNotification extends HttpServlet {
 		int minute = Integer.parseInt(request.getParameter("minute"));
 		String timeZoneID = request.getParameter("timezone");
 		System.out.println("Timezone: "+timeZoneID);
+		
+		// Message
+		String title = (String) request.getParameter("title");
+		System.out.println("title: "+title);
+		String body = (String) request.getParameter("body");
+		System.out.println("body: "+body);
 		
 		DBManager db = new DBManager();
 		String fcmtoken = null;
@@ -121,8 +128,8 @@ public class SendNotification extends HttpServlet {
 			}
 		}
 		
-		String title = "Martin";
-		String body = "beweg die du FETTE SAU";
+		//String title = "HundeGassiApp";
+		//String body = "Gehe mit deinem Hund Gassi!";
 		
 		if(fcmtoken != null) {
 		
@@ -154,7 +161,7 @@ public class SendNotification extends HttpServlet {
 					response.getWriter().append("Nachricht wurde erfolgreich gesendet.");
 				} catch (Exception e) {
 					e.printStackTrace();
-					response.getWriter().append("Nachricht Senden fehlgeschlagen");
+					response.getWriter().append("Senden der Nachricht fehlgeschlagen");
 				}
 			}
 			else {

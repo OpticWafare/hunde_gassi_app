@@ -110,7 +110,7 @@ public class NotificationSender {
 
 		// Neuen Token holen (falls vorhanden)
 		googleCredential.refreshToken();
-		System.out.println("Token: " + googleCredential.getAccessToken());
+		System.out.println("Google Token: " + googleCredential.getAccessToken());
 		// Token zurückgeben
 		return googleCredential.getAccessToken();
 	}
