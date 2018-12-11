@@ -81,10 +81,15 @@ public class NewRouteButtonListener implements View.OnClickListener {
                 DistanceLabelUpdater distanceLabelUpdater = new DistanceLabelUpdater(mapsTab.getTextView_info1(), mapsTab.getMainActivity());
                 timer.addListener(distanceLabelUpdater);
 
-                //UpdateLocationTask timerTask = new UpdateLocationTaskFake(startPoint, 0.5, 0.5);
-                UpdateLocationTaskReal timerTask = new UpdateLocationTaskReal(mapsTab);
-                //mapsTab.addLocationListener(timerTask);
-                mapsTab.getMainActivity().addLocationListener(timerTask);
+                // Fake Task
+                UpdateLocationTask timerTask = new UpdateLocationTaskFake(startPoint, 0.5, 0.5);
+
+                /* Real Task TODO hier ändern
+                //UpdateLocationTaskReal timerTask = new UpdateLocationTaskReal(mapsTab);
+                //mapsTab.getMainActivity().addLocationListener(timerTask); */
+
+                //mapsTab.addLocationListener(timerTask); // Unnötig?
+
                 timer.schedule(timerTask, TimeUnit.SECONDS.toMillis(3), TimeUnit.SECONDS.toMillis(3));
 
                 mapsTab.setCurrentRoute(currentRoute);

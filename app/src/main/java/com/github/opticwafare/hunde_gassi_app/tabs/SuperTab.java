@@ -1,6 +1,7 @@
 package com.github.opticwafare.hunde_gassi_app.tabs;
 
 import com.github.opticwafare.hunde_gassi_app.MainActivity;
+import android.support.v4.app.Fragment;
 
 public abstract class SuperTab {
 

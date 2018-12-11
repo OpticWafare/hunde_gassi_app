@@ -20,9 +20,9 @@ public class MainPagerAdapter extends FixedTabsPagerAdapter {
         // Tabs hinzufügen
         addTab(new NotificationTab());
         mapsTab = new MapsTab();
+        //addTab(new SettingsTab());
         addTab(mapsTab);
-        addTab(new SettingsTab());
-        //addTab(new ContactsTab());
+        addTab(new ContactsTab());
     }
 
     public void locationAccessGranted() {

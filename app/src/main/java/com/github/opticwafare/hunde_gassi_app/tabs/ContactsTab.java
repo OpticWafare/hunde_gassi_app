@@ -37,7 +37,10 @@ public class ContactsTab extends SuperTab {
 
         this.mainActivity = mainActivity;
 
-        //buttonNewContact = (Button) mainActivity.findViewById(R.id.buttonNewContact);
+        //
+        //
+        //
+        // buttonNewContact = (Button) mainActivity.findViewById(R.id.buttonNewContact);
         //scrollViewContacts = (ScrollView) mainActivity.findViewById(R.id.scrollViewContacts);
         linearLayoutContacts = (LinearLayout) mainActivity.findViewById(R.id.linearLayoutContacts);
 
@@ -56,9 +59,9 @@ public class ContactsTab extends SuperTab {
         ViewGroup layout = null;
         for(int i = 0; i < myFriends.length; i++) {
 
-            contactElement = new ContactElement(R.layout.element_contact, myFriends[i]);
+            contactElement = new ContactElement(mainActivity, R.layout.element_contact, myFriends[i]);
             contactElements.add(contactElement);
-            layout = contactElement.show(inflater, linearLayoutContacts);
+            layout = contactElement.show(inflater, linearLayoutContacts, i);
 
             // GUI zum Container hinzufügen
             linearLayoutContacts.addView(layout);
